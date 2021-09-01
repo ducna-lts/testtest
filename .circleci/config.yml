@@ -1,13 +1,114 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-# Use a package of configuration called an orb.
 orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.4.1
-# Orchestrate or schedule a set of jobs
+  aws-ecr: circleci/aws-ecr@7.0.0
+  aws-eks: circleci/aws-eks@1.1.0
+  slack: circleci/slack@4.4.2
+
+jobs:
+  notify-on-start:
+    parallelism: 1
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - slack/notify:
+          channel: 'deployments'
+          template: basic_success_1
+          event: pass
+  notify-on-success:
+    parallelism: 1
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - slack/notify:
+          channel: 'deployments'
+          template: success_tagged_deploy_1
+          event: pass
+  notify_on_start_prs:
+    parallelism: 1
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - slack/notify:
+          channel: 'Lts-dev'
+          template: basic_success_1
+          event: pass
+  test:
+    docker:
+      - image: circleci/node:10.13.0
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: sudo npm install -g newman
+      - run:
+          name: Create env
+          command: echo $TEST_CONFIG >> postman_environment.json
+      - run:
+          name: Unit Tests
+          command: newman run  ./LinkerApi.postman_collection.json -e x_postman_environment.json
+
 workflows:
-  # Name the workflow "welcome"
-  welcome:
-    # Run the welcome/run job in its own container
+  build-deploy-to-k8s:
     jobs:
-      - welcome/run
+      - notify-on-start:
+          filters:
+              branches:
+                only:
+                  - deploy      
+          context: 
+            - devops
+
+      - aws-ecr/build-and-push-image:
+          requires:
+            - notify-on-start      
+          filters:
+              branches:
+                only:
+                  - deploy
+          context:
+            - devops
+          repo: beee-linker-api
+          dockerfile: docker/app/Dockerfile
+          extra-build-args: --build-arg ACCESS_TOKEN_USR=$GITHUB_COMPANY_USERNAME --build-arg ACCESS_TOKEN_PWD=$GITHUB_COMPANY_TOKEN
+          tag: $CIRCLE_SHA1  
+
+      - aws-eks/update-container-image:
+          requires:
+            - aws-ecr/build-and-push-image
+
+          filters:
+              branches:
+                only:
+                  - deploy
+          context:
+            - devops      
+          cluster-name: linker-stg
+          aws-region: $AWS_REGION
+          resource-name: "deployment/linker-api"
+          container-image-updates: "beee-linker-api=$AWS_ECR_ACCOUNT_URL/beee-linker-api:$CIRCLE_SHA1"
+          get-rollout-status: true
+          watch-rollout-status: true
+          namespace: default
+          record: true
+
+      - notify-on-success:
+          requires:
+            - aws-eks/update-container-image
+          context: 
+            - devops
+  test_before_merge:
+    jobs:
+      # - notify_on_start_prs:
+      #     filters:
+      #         branches:
+      #           only:
+      #             - test_ci      
+      #     context: 
+      #       - devops
+      - test:
+          filters:
+              branches:
+                only:
+                  - circleci-project-setup
+          context: 
+            - devops

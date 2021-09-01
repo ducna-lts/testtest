@@ -1,0 +1,3737 @@
+{
+	"info": {
+		"_postman_id": "79c22ffe-be5e-43eb-ba8d-cbdd75eb768a",
+		"name": "LinkerApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "LoginSuccess",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Login head 200\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"const response = pm.response.json();",
+									"pm.test(\"Login token have string\", function(){",
+									"    pm.expect(response.token).to.be.a(\"string\");",
+									"    pm.environment.set(\"tokenLogin\", response.token);",
+									"    // pm.expect(response.token).to.eql(\"dhgfdjishgdjk\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/login",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LoginMissing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Login success\", function(){",
+									"    pm.response.to.have.status(400);",
+									"    var response = pm.response.json();",
+									"    pm.expect(response.error_code).to.be.a(\"string\");",
+									"    pm.expect(response.error_code).to.eq(\"INVALID_PARAMS\");",
+									"    // pm.expect(response.token).to.eql(\"dhgfdjishgdjk\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"j.soliva@b-eee.com\",\n    \"password\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/login",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET_UserInfo",
+			"item": [
+				{
+					"name": "GET /api/v0/userinfo Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"GET /api/v0/userinfo Success\", function(){",
+									"    pm.response.to.have.status(200);",
+									"    var response = pm.response.json();",
+									"    pm.expect(response.u_id).to.be.a(\"string\");",
+									"    pm.expect(response.username).to.be.a(\"string\");",
+									"    pm.expect(response.email).to.be.a(\"string\");",
+									"    pm.expect(response.profile_pic).to.be.a(\"string\");",
+									"    pm.expect(response.user_roles).to.be.a(\"array\");",
+									"    pm.expect(response.email).to.eql(pm.environment.get(\"email\"));",
+									"    pm.environment.set(\"currentWorkspaceId\", response.current_workspace_id);",
+									"    pm.environment.set(\"currentUserId\", response.u_id);",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/userinfo",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"userinfo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/v0/userinfo Not Auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"GET /api/v0/userinfo  Not Auth\", function(){",
+									"    pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/userinfo",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"userinfo"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PUT_UserInfo",
+			"item": [
+				{
+					"name": "PUT /api/v0/userinfo Successs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"PUT /api/v0/userinfo Success\", function(){",
+									"    pm.response.to.have.status(200);",
+									"    var response = pm.response.json();",
+									"    pm.expect(response.error).to.be.a(\"null\");",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"{{currentUserId}}\",\n    \"username\": \"test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/userinfo",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"userinfo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /api/v0/userinfo Missing Param",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"PUT /api/v0/userinfo Missing Param\", function(){",
+									"    pm.response.to.have.status(400);",
+									"    var response = pm.response.json();",
+									"    pm.expect(response.error_code).to.be.a(\"string\");",
+									"    pm.expect(response.error_code).to.eq(\"INVALID_PARAMS\");",
+									"    pm.expect(response.code).to.eq(101);",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/userinfo",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"userinfo"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST_UsersRegistration",
+			"item": [
+				{
+					"name": "POST /api/v0/users/registration Success",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let email = pm.variables.replaceIn(\"{{$randomUserName}}\")\r",
+									"pm.environment.set(\"registerEmail\", `${email}__test@b-eee.com`)\r",
+									"pm.variables.set(\"hostname\", \"1345678abc\")\r",
+									"pm.variables.set(\"registration_domain\", \"domain/\")\r",
+									"pm.variables.set(\"username\", \"UserNameTest\")\r",
+									"pm.variables.set(\"registration_path\", \"path/\")\r",
+									"pm.variables.set(\"value1\", \"Value 1\")\r",
+									"pm.variables.set(\"emailTemplatesId\", \"d-ba7ab94785404d05944db36408b94f9d\")"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test confirmation id is a string\", function(){\r",
+									"    pm.expect(response.confirmation_id).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Test email is a string\", function(){\r",
+									"    pm.expect(response.email).to.be.a(\"string\");\r",
+									"});\r",
+									"\r",
+									"const emailForTest = pm.variables.get(\"registerEmail\").replace(\"__test\", \"\");\r",
+									"pm.test(\"Test Response email equal emailForTest\", function(){\r",
+									"    pm.expect(response.email).to.eql(emailForTest);\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"confirmationId\", response.confirmation_id);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"{{registerEmail}}\",\r\n  \"hostname\":\"{{hostname}}\",\r\n  \"http\":\"http\",\r\n  \"protocol\":\"http\",\r\n  \"registration_domain\":\"{{registration_domain}}\",\r\n  \"username\":\"{{username}}\",\r\n  \"registration_path\":\"{{registration_path}}\",\r\n  \"additional_info\": {\r\n      \"field1\": \"{{value1}}\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/registration",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/v0/users/registration MissingParams",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response Status 400 \", function(){\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Check error code is a string\", function(){\r",
+									"    pm.expect(response.error_code).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check message is a string\", function(){\r",
+									"    pm.expect(response.message).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check code is a Number\", function(){\r",
+									"    pm.expect(response.code).to.be.a(\"number\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\":\"\",\r\n  \"hostname\":\"\",\r\n  \"http\":\"\",\r\n  \"protocol\":\"\",\r\n  \"registration_domain\":\"\",\r\n  \"username\":\"\",\r\n  \"registration_path\":\"\",\r\n  \"additional_info\": {\r\n      \"field1\": \"\"\r\n  },\r\n  \"email_templates_id\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/registration",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"registration"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET_UserRegistrationConfirm",
+			"item": [
+				{
+					"name": "GET /api/v0/users/registration/confirm Success",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test confirmation id is a string\", function(){\r",
+									"    pm.expect(response.user.confirmation_id).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Test email is a string\", function(){\r",
+									"    pm.expect(response.user.email).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Test confirmation id is a string\", function(){  \r",
+									"    pm.expect(response.user.id).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Test username is a string\", function(){\r",
+									"    pm.expect(response.user.username).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Test confirmed is a boolean\", function(){\r",
+									"    pm.expect(response.user.confirmed).to.be.a(\"boolean\");\r",
+									"});\r",
+									"pm.test(\"Test email_confirmed is a boolean\", function(){\r",
+									"    pm.expect(response.user.email_confirmed).to.be.a(\"boolean\");\r",
+									"});\r",
+									"pm.test(\"Test isElapsed is a boolean\", function(){\r",
+									"    pm.expect(response.user.isElapsed).to.be.a(\"boolean\");\r",
+									"});\r",
+									"pm.test(\"Test email is eq environment email\", function(){\r",
+									"    pm.expect(response.user.email).to.eql(pm.environment.get(\"registerEmail\"));\r",
+									"});\r",
+									"pm.environment.set(\"idUser\", response.user.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/registration/confirm?id={{confirmationId}}",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"registration",
+								"confirm"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{confirmationId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/v0/users/registration/confirm MissingParams",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response Status 400 \", function(){\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Check error code is a string\", function(){\r",
+									"    pm.expect(response.error_code).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check message is a string\", function(){\r",
+									"    pm.expect(response.message).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check code is a Number\", function(){\r",
+									"    pm.expect(response.code).to.be.a(\"number\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/registration/confirm?id=",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"registration",
+								"confirm"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST_UserRegistrationConfirm",
+			"item": [
+				{
+					"name": "POST /api/v0/users/registration Success",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"POST /api/v0/users/registration/confirm Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const response = pm.response.json();\r",
+									"    pm.expect(response.token).to.be.a(\"string\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"confirmation_id\": \"{{confirmationId}}\",\r\n  \"email\":\"{{registerEmail}}\",\r\n  \"password\":\"{{password}}\",\r\n  \"username\":\"{{username}}\",\r\n  \"workspace\":\"{{currentWorkspaceId}}\",\r\n  \"additional_info\": {\r\n      \"field1\": \"{{value1}}\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/registration/confirm",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"registration",
+								"confirm"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/v0/users/registration MissingParams",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response Status 400 \", function(){\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Check error code is a string\", function(){\r",
+									"    pm.expect(response.error_code).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check message is a string\", function(){\r",
+									"    pm.expect(response.message).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check code is a Number\", function(){\r",
+									"    pm.expect(response.code).to.be.a(\"number\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"confirmation_id\": \"\",\r\n  \"email\":\"\",\r\n  \"password\":\"\",\r\n  \"username\":\"\",\r\n  \"workspace\":\"\",\r\n  \"additional_info\": {\r\n      \"field1\": \"\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/registration/confirm",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"registration",
+								"confirm"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST_Confirmations",
+			"item": [
+				{
+					"name": "POST /api/v0/confirmations Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"POST /api/v0/usermetainfo Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const response = pm.response.json();\r",
+									"    pm.expect(response.confirmation_id).to.be.a(\"string\");\r",
+									"    pm.environment.set(\"confirmationForgotId\", response.confirmation_id);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/confirmations",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"confirmations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST_UsersPasswordForgot",
+			"item": [
+				{
+					"name": "POST /api/v0/users/password/forgot Success",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"rootPath\", \"rootPath///\")\r",
+									"pm.variables.set(\"host\", \"host///\")"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"POST api/v0/users/password/forgot Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const response = pm.response.json();\r",
+									"    pm.expect(response.valid_email).to.be.a(\"boolean\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\":\"{{email}}\",\r\n  \"host\": \"{{host}}\",\r\n  \"root_path\": \"{{rootPath}}\",\r\n  \"confirmation_id\": \"{{confirmationForgotId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/password/forgot",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"password",
+								"forgot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/v0/users/password/forgot MissingParams",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response Status 400 \", function(){\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Check error code is a string\", function(){\r",
+									"    pm.expect(response.error_code).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check message is a string\", function(){\r",
+									"    pm.expect(response.message).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check code is a Number\", function(){\r",
+									"    pm.expect(response.code).to.be.a(\"number\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\":\"\",\r\n  \"host\": \"\",\r\n  \"root_path\": \"\",\r\n  \"confirmation_id\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/password/forgot",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"password",
+								"forgot"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PUT_UsersPasswordForgot",
+			"item": [
+				{
+					"name": "PUT /api/v0/users/password/forgot Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"PUT api/v0/users/password/forgot Success\", function(){\r",
+									"    pm.expect(pm.response.code).to.be.not.eq(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"new_password\":\"{{password}}\",\r\n  \"confirm_password\": \"{{password}}\",\r\n  \"id\": \"1212112121\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/password/forgot",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"password",
+								"forgot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /api/v0/users/password/forgot MissingParams",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response Status 400 \", function(){\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Check error code is a string\", function(){\r",
+									"    pm.expect(response.error_code).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check message is a string\", function(){\r",
+									"    pm.expect(response.message).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check code is a Number\", function(){\r",
+									"    pm.expect(response.code).to.be.a(\"number\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"new_password\":\"\",\r\n  \"confirm_password\": \"\",\r\n  \"id\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/password/forgot",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"password",
+								"forgot"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST_Usermetainfo",
+			"item": [
+				{
+					"name": "POST /api/v0/usermetainfo Success",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let randomUserName = pm.variables.replaceIn(\"{{$randomFullName}}\")\r",
+									"pm.variables.set(\"randomTestField\", randomUserName)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header success 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test TestField is a string\", function(){\r",
+									"    pm.expect(response.TestField).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Test TestField is \beq variable randomTestField\", function(){\r",
+									"    pm.expect(response.TestField).to.eql(pm.variables.get(\"randomTestField\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"u_id\": \"{{currentUserId}}\",\r\n  \"additional_info\": {\r\n      \"TestField\": \"{{randomTestField}}\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/usermetainfo",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"usermetainfo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/v0/usermetainfo NotAuth",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let randomUserName = pm.variables.replaceIn(\"{{$randomFullName}}\")\r",
+									"pm.variables.set(\"randomTestField\", randomUserName)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test Header is 401\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"u_id\": \"{{currentUserId}}\",\r\n  \"additional_info\": {\r\n      \"TestField\": \"{{randomTestField}}\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/usermetainfo",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"usermetainfo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /api/v0/usermetainfo Success",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let randomUserName = pm.variables.replaceIn(\"{{$randomFullName}}\")\r",
+									"pm.variables.set(\"randomTestField\", randomUserName)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header success 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test TestField is a string\", function(){\r",
+									"    pm.expect(response.TestField).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Test TestField is \beq variable randomTestField\", function(){\r",
+									"    pm.expect(response.TestField).to.eql(pm.variables.get(\"randomTestField\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"u_id\": \"{{currentUserId}}\",\r\n  \"additional_info\": {\r\n      \"TestField\": \"{{randomTestField}}\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/usermetainfo",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"usermetainfo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH /api/v0/usermetainfo NotAuth",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let randomUserName = pm.variables.replaceIn(\"{{$randomFullName}}\")\r",
+									"pm.variables.set(\"randomTestField\", randomUserName)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test Header is 401\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"u_id\": \"{{currentUserId}}\",\r\n  \"additional_info\": {\r\n      \"TestField\": \"{{randomTestField}}\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/usermetainfo",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"usermetainfo"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST_LogOut",
+			"item": [
+				{
+					"name": "POST /api/v0/users/logout Success",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"POST /api/v0/users/logout Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    \r",
+									"    const http = pm.variables.get(\"httpLinker\");\r",
+									"    const email = pm.variables.get(\"email\");\r",
+									"    const password = pm.variables.get(\"password\");\r",
+									"    const postRequest = {\r",
+									"        url: `${http}/api/v0/login`,\r",
+									"        method: 'POST',\r",
+									"        header: {\r",
+									"            'Content-Type': 'application/json'\r",
+									"        },\r",
+									"        body: {\r",
+									"            mode: 'raw',\r",
+									"            raw: JSON.stringify({\r",
+									"                email,\r",
+									"                password\r",
+									"            })\r",
+									"        }\r",
+									"    };\r",
+									"    pm.sendRequest(postRequest, (error, response) => {\r",
+									"        if (error) {\r",
+									"            console.log(error);\r",
+									"            pm.expect(true).to.be.eql(false);\r",
+									"        } else {\r",
+									"            const res =  response.json();\r",
+									"            pm.environment.set(\"tokenLogin\", res.token);\r",
+									"        }\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/logout",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/v0/users/logout NotAuth",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"POST /api/v0/users/logout Success\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/logout",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET_UsersPasswordValidate",
+			"item": [
+				{
+					"name": "GET /api/v0/users/password/validate Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"PUT api/v0/users/password/forgot Success\", function(){\r",
+									"    pm.expect(pm.response.code).to.be.not.eq(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/password/validate?id=123123123",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"password",
+								"validate"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "123123123"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/v0/users/password/validate MissingParams",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response Status 400 \", function(){\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Check error code is a string\", function(){\r",
+									"    pm.expect(response.error_code).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check message is a string\", function(){\r",
+									"    pm.expect(response.message).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check code is a Number\", function(){\r",
+									"    pm.expect(response.code).to.be.a(\"number\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/password/validate?id=",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"password",
+								"validate"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET_UsersConfirmations_Confirmation_id",
+			"item": [
+				{
+					"name": "GET /api/v0/users/confirmations/:confirmation_id Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test confirmation id is a string\", function(){\r",
+									"    pm.expect(response.user.confirmation_id).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Test confirmed is a boolean\", function(){\r",
+									"    pm.expect(response.user.confirmed).to.be.a(\"boolean\");\r",
+									"});\r",
+									"pm.test(\"Test email is a string\", function(){  \r",
+									"    pm.expect(response.user.email).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Test email confirmed is a boolean\", function(){\r",
+									"    pm.expect(response.user.email_confirmed).to.be.a(\"boolean\");\r",
+									"});\r",
+									"pm.test(\"Test id is a string\", function(){\r",
+									"    pm.expect(response.user.id).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Test isElapsed is a boolean\", function(){\r",
+									"    pm.expect(response.user.isElapsed).to.be.a(\"boolean\");\r",
+									"});\r",
+									"pm.test(\"Test username is a string\", function(){\r",
+									"    pm.expect(response.user.username).to.be.a(\"string\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/confirmations/:confirmationId",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"confirmations",
+								":confirmationId"
+							],
+							"variable": [
+								{
+									"key": "confirmationId",
+									"value": "{{confirmationId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/v0/users/confirmations/:confirmation_id Missing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response Status no 200 \", function(){\r",
+									"    pm.expect(pm.response.code).to.be.not.eq(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Check error code is a string\", function(){\r",
+									"    pm.expect(response.error_code).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check message is a string\", function(){\r",
+									"    pm.expect(response.message).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check code is a Number\", function(){\r",
+									"    pm.expect(response.code).to.be.a(\"number\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/confirmations/:confirmationId",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"confirmations",
+								":confirmationId"
+							],
+							"variable": [
+								{
+									"key": "confirmationId",
+									"value": "\"\""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST_UsersConfirmations",
+			"item": [
+				{
+					"name": "POST /api/v0/users/confirmations Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"POST/api/v0/users/confirmations Success\", function(){\r",
+									"    pm.expect(pm.response.code).to.be.not.eq(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"confirmation_id\": \"{{confirmationId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/confirmations",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"confirmations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/v0/users/confirmations MissParams",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response Status 400 \", function(){\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Check error code is a string\", function(){\r",
+									"    pm.expect(response.error_code).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check message is a string\", function(){\r",
+									"    pm.expect(response.message).to.be.a(\"string\");\r",
+									"});\r",
+									"pm.test(\"Check code is a Number\", function(){\r",
+									"    pm.expect(response.code).to.be.a(\"number\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"confirmation_id\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/confirmations",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"confirmations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST_Token",
+			"item": [
+				{
+					"name": "POST /api/v0/token Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test Token is a string\", function(){\r",
+									"    pm.expect(response.token).to.be.a(\"string\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n    \"token_expire\":\"{{tokenLogin}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/token",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/v0/token NotAuth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"POST /api/v0/token Not Auth \", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/token",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PUT_UsersPassword",
+			"item": [
+				{
+					"name": "PUT /api/v0/users/password Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Exit response\", function(){\r",
+									"    pm.expect(response).to.have.property(\"error\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"old_password\": \"{{password}}\",\r\n  \"new_password\": \"{{newPassword}}\",\r\n  \"confirm_password\":\"{{confirmPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/password",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /api/v0/users/password NotAuth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"POST /api/v0/token Not Auth \", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/password",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET_UsersPassword_Expiry",
+			"item": [
+				{
+					"name": "GET /api/v0/users/password-expiry Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Exit response\", function(){\r",
+									"    pm.expect(response.is_expired).to.be.a('boolean');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/password-expiry",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"password-expiry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/v0/users/password-expiry Not Auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"POST /api/v0/token Not Auth \", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/password-expiry",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"password-expiry"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST_UpdateUserEmailRequest",
+			"item": [
+				{
+					"name": "POST /api/v0/users/email Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 500]);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test Token is a string\", function(){\r",
+									"    if (pm.response.code === 500) {\r",
+									"        pm.expect(response.error).to.be.eq(\"error sending email from sendGrid statusCode:[400]\");\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let email = pm.variables.replaceIn(\"{{$randomUserName}}\");",
+									"pm.variables.set(\"updateEmailRequest\", `${email}__test@b-eee.com`);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n    \"email\":\"{{updateEmailRequest}}\",\r\n    \"registration_path\": \"/registration_page\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/email",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/v0/users/email Missing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response Status 400 \", function(){\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let email = pm.variables.replaceIn(\"{{$randomUserName}}\");",
+									"pm.variables.set(\"updateEmailRequest\", `${email}__test@b-eee.com`);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n    \"email\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/email",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/v0/users/email NotAuth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"POST /api/v0/token Not Auth \", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let email = pm.variables.replaceIn(\"{{$randomUserName}}\");",
+									"pm.variables.set(\"updateEmailRequest\", `${email}__test@b-eee.com`);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n    \"email\":\"{{updateEmailRequest}}\",\r\n    \"registration_path\": \"/registration_page\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/users/email",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"users",
+								"email"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET_WorkSpaceCurrent",
+			"item": [
+				{
+					"name": "GET /api/v0/workspacecurrent Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test have workspace_id\", function(){\r",
+									"    pm.expect(response.workspace_id).to.be.a('string');\r",
+									"});\r",
+									"pm.test(\"Test workspace_id length\", function(){\r",
+									"    pm.expect(response.workspace_id.length).to.be.eq(24);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspacecurrent",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspacecurrent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/v0/workspacecurrent NotAuth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspacecurrent",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspacecurrent"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET_GetWorkspaces",
+			"item": [
+				{
+					"name": "GET /api/v0/workspaces Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test have current_workspace_id\", function(){\r",
+									"    pm.expect(response.current_workspace_id).to.be.a('string');\r",
+									"});\r",
+									"pm.test(\"Test current_workspace_id length\", function(){\r",
+									"    pm.expect(response.current_workspace_id.length).to.be.eq(24);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test workspaces is array\", function(){\r",
+									"    pm.expect(response.workspaces).to.be.a('array');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/v0/workspaces NotAuth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST_CreateNewWorkspace",
+			"item": [
+				{
+					"name": "POST /api/v0/workspaces Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test have w_id\", function(){\r",
+									"    pm.expect(response.w_id).to.be.a('string');\r",
+									"});\r",
+									"pm.test(\"Test w_id length\", function(){\r",
+									"    pm.expect(response.w_id.length).to.be.eq(24);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test_run_linker_api\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/v0/workspaces NotAuth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"134\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/v0/workspaces Missing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test have error_code\", function(){\r",
+									"    pm.expect(response.error_code).to.be.a('string');\r",
+									"});\r",
+									"pm.test(\"Test error_code is INVALID_PARAMS\", function(){\r",
+									"    pm.expect(response.error_code).to.be.eq('INVALID_PARAMS');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST_SetCurrentWorkspace",
+			"item": [
+				{
+					"name": "POST /api/v0/workspaces/{{workSpaceToSet}}/select Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const http = pm.variables.get(\"httpLinker\");",
+									"const token = pm.variables.get(\"tokenLogin\");",
+									"",
+									"const getRequest = {",
+									"    url: `${http}/api/v0/workspaces`,",
+									"    method: 'GET',",
+									"    header: {",
+									"        'Content-Type': 'application/json',",
+									"        'Authorization': `Bearer ${token}`",
+									"    }",
+									"};",
+									"pm.sendRequest(getRequest, (error, response) => {",
+									"    if (error) {",
+									"        console.log(error);",
+									"        pm.expect(true).to.be.eql(false);",
+									"    } else {",
+									"        const res =  response.json();",
+									"        let workSpaceToSet = res.current_workspace_id;",
+									"        if (res.workspaces.length > 1) {",
+									"            const r = res.workspaces.find(w => w.workspace_id !== workSpaceToSet);",
+									"            workSpaceToSet = r.workspace_id;",
+									"        }",
+									"        pm.variables.set(\"workSpaceToSet\", workSpaceToSet);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces/{{workSpaceToSet}}/select",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces",
+								"{{workSpaceToSet}}",
+								"select"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/v0/workspaces/{{workSpaceToSet}}/select NotAuth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"134\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces/{{workSpaceToSet}}/select",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces",
+								"{{workSpaceToSet}}",
+								"select"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/v0/workspaces/{{workSpaceToSet}}/select Missing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test have error_code\", function(){\r",
+									"    pm.expect(response.error_code).to.be.a('string');\r",
+									"});\r",
+									"pm.test(\"Test error_code is SYSTEM_ERROR\", function(){\r",
+									"    pm.expect(response.error_code).to.be.eq('SYSTEM_ERROR');\r",
+									"});\r",
+									"pm.test(\"Test message is string\", function(){\r",
+									"    pm.expect(response.message).to.be.a('string');\r",
+									"});\r",
+									"pm.test(\"Test message\", function(){\r",
+									"    pm.expect(response.message).to.be.eq('map[error:No privileges to use the specified workspace]');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces/\"\"/select",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces",
+								"\"\"",
+								"select"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET_GetPasswordPolicy",
+			"item": [
+				{
+					"name": "GET /api/v0/workspaces/:workspace-id/password-policy Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test have expired_day\", function(){\r",
+									"    pm.expect(response.expired_day).to.be.a('number');\r",
+									"});\r",
+									"pm.test(\"Test have lockout_count\", function(){\r",
+									"    pm.expect(response.lockout_count).to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test have lockout_time\", function(){\r",
+									"    pm.expect(response.lockout_time).to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test have min_length\", function(){\r",
+									"    pm.expect(response.min_length).to.be.a('number');\r",
+									"});\r",
+									"pm.test(\"Test have pattern_check_type\", function(){\r",
+									"    pm.expect(response.pattern_check_type).to.be.a('number');\r",
+									"});\r",
+									"pm.test(\"Test have same_limit\", function(){\r",
+									"    pm.expect(response.same_limit).to.be.a('number');\r",
+									"});\r",
+									"pm.test(\"Test have use_expired_day\", function(){\r",
+									"    pm.expect(response.use_expired_day).to.be.a('boolean');\r",
+									"});\r",
+									"pm.test(\"Test have use_lockout_count\", function(){\r",
+									"    pm.expect(response.use_lockout_count).to.be.a('boolean');\r",
+									"});\r",
+									"pm.test(\"Test have use_lockout_time\", function(){\r",
+									"    pm.expect(response.use_lockout_time).to.be.a('boolean');\r",
+									"});\r",
+									"pm.test(\"Test have use_min_length\", function(){\r",
+									"    pm.expect(response.use_min_length).to.be.a('boolean');\r",
+									"});\r",
+									"pm.test(\"Test have use_pattern_check\", function(){\r",
+									"    pm.expect(response.use_pattern_check).to.be.a('boolean');\r",
+									"});\r",
+									"pm.test(\"Test have use_same_limit\", function(){\r",
+									"    pm.expect(response.use_same_limit).to.be.a('boolean');\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const http = pm.variables.get(\"httpLinker\");",
+									"const token = pm.variables.get(\"tokenLogin\");",
+									"",
+									"const getRequest = {",
+									"    url: `${http}/api/v0/workspaces`,",
+									"    method: 'GET',",
+									"    header: {",
+									"        'Content-Type': 'application/json',",
+									"        'Authorization': `Bearer ${token}`",
+									"    }",
+									"};",
+									"pm.sendRequest(getRequest, (error, response) => {",
+									"    if (error) {",
+									"        console.log(error);",
+									"        pm.expect(true).to.be.eql(false);",
+									"    } else {",
+									"        const res =  response.json();",
+									"        let workSpaceToSet = res.current_workspace_id;",
+									"        pm.variables.set(\"workSpaceToSet\", workSpaceToSet);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces/{{workSpaceToSet}}/password-policy",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces",
+								"{{workSpaceToSet}}",
+								"password-policy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/v0/workspaces/:workspace-id/password-policy Missing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test have error\", function(){\r",
+									"    pm.expect(response.error).to.be.a('string');\r",
+									"});\r",
+									"pm.test(\"Test error is No privileges to use the specified workspace\", function(){\r",
+									"    pm.expect(response.error).to.be.eq('No privileges to use the specified workspace');\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces/\"\"/password-policy",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces",
+								"\"\"",
+								"password-policy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/v0/workspaces/:workspace-id/password-policy NotAuth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces/{{workSpaceToSet}}/password-policy",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces",
+								"{{workSpaceToSet}}",
+								"password-policy"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET_GetWorkspaceFunctionality",
+			"item": [
+				{
+					"name": "GET /api/v0/workspaces/:workspace-id/functionality Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test have w_id\", function(){\r",
+									"    pm.expect(response.w_id).to.be.a('string');\r",
+									"});\r",
+									"pm.test(\"Test w_id is workSpaceToSet\", function(){\r",
+									"    pm.expect(response.w_id).to.be.eq(pm.variables.get('workSpaceToSet'));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test have ws_functions\", function(){\r",
+									"    pm.expect(response.ws_functions).to.be.a('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test have app_functions\", function(){\r",
+									"    pm.expect(response.app_functions).to.be.a('object');\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const http = pm.variables.get(\"httpLinker\");",
+									"const token = pm.variables.get(\"tokenLogin\");",
+									"",
+									"const getRequest = {",
+									"    url: `${http}/api/v0/workspaces`,",
+									"    method: 'GET',",
+									"    header: {",
+									"        'Content-Type': 'application/json',",
+									"        'Authorization': `Bearer ${token}`",
+									"    }",
+									"};",
+									"pm.sendRequest(getRequest, (error, response) => {",
+									"    if (error) {",
+									"        console.log(error);",
+									"        pm.expect(true).to.be.eql(false);",
+									"    } else {",
+									"        const res =  response.json();",
+									"        let workSpaceToSet = res.current_workspace_id;",
+									"        pm.variables.set(\"workSpaceToSet\", workSpaceToSet);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces/{{workSpaceToSet}}/functionality",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces",
+								"{{workSpaceToSet}}",
+								"functionality"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/v0/workspaces/:workspace-id/functionality Missing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Test error is No privileges to use the specified workspace\", function(){\r",
+									"    pm.expect(response.error).to.be.eq('No privileges to use the specified workspace');\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces/\"\"/functionality",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces",
+								"\"\"",
+								"functionality"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/v0/workspaces/:workspace-id/functionality NotAuth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces/{{workSpaceToSet}}/functionality",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces",
+								"{{workSpaceToSet}}",
+								"functionality"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET_GetWorkspaceUsage",
+			"item": [
+				{
+					"name": "GET /api/v0/usages/users Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test have w_id\", function(){\r",
+									"    pm.expect(response.w_id).to.be.a('string');\r",
+									"});\r",
+									"pm.test(\"Test w_id is workSpaceToSet\", function(){\r",
+									"    pm.expect(response.w_id).to.be.eq(pm.variables.get('workSpaceToSet'));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test have usage\", function(){\r",
+									"    pm.expect(response.usage).to.be.a('object');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test have usage.users\", function(){\r",
+									"    pm.expect(response.usage.users).to.be.a('number');\r",
+									"});\r",
+									"pm.test(\"Test have usage.users_limit\", function(){\r",
+									"    pm.expect(response.usage.users_limit).to.be.a('number');\r",
+									"});\r",
+									"pm.test(\"Test have usage.storage\", function(){\r",
+									"    pm.expect(response.usage.storage).to.be.a('number');\r",
+									"});\r",
+									"pm.test(\"Test have usage.storage_limit\", function(){\r",
+									"    pm.expect(response.usage.storage_limit).to.be.a('number');\r",
+									"});\r",
+									"pm.test(\"Test have usage.datastores\", function(){\r",
+									"    pm.expect(response.usage.datastores).to.be.a('number');\r",
+									"});\r",
+									"pm.test(\"Test have usage.datastores_limit\", function(){\r",
+									"    pm.expect(response.usage.datastores_limit).to.be.a('number');\r",
+									"});\r",
+									"pm.test(\"Test have usage.items\", function(){\r",
+									"    pm.expect(response.usage.items).to.be.a('number');\r",
+									"});\r",
+									"pm.test(\"Test have usage.items_limit\", function(){\r",
+									"    pm.expect(response.usage.items_limit).to.be.a('number');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/usages/users",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"usages",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/v0/usages/users NotAuth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/usages/users",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"usages",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST_GlobalSearch",
+			"item": [
+				{
+					"name": "POST /api/v0/globalsearch Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 500]);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test have search_result\", function(){\r",
+									"    if (pm.response.code === 500) {\r",
+									"        pm.expect(response.search_result).to.be.eql(null);\r",
+									"    }\r",
+									"    if (pm.response.code === 200) {\r",
+									"        // pm.expect(response.search_result).to.be.a(null);\r",
+									"        pm.expect(true).to.be.eq(true);\r",
+									"        pm.expect(response.search_result).to.be.a('array');\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/globalsearch",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"globalsearch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/v0/globalsearch NotAuth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": \"1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/globalsearch",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"globalsearch"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET_GetQueueList",
+			"item": [
+				{
+					"name": "GET /api/v0/tasks Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 500]);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test have error\", function(){\r",
+									"    if (pm.response.code === 500) {\r",
+									"        pm.expect(response.error).to.be.eql(\"(BadValue) $in needs an array\");\r",
+									"    }\r",
+									"    if (pm.response.code === 200) {\r",
+									"        // pm.expect(response.search_result).to.be.a(null);\r",
+									"        pm.expect(true).to.be.eq(true);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/tasks?all=true",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "all",
+									"value": "true"
+								},
+								{
+									"key": "w_id",
+									"value": "6124aa94b6201df27274bb93",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/v0/tasks NotAuth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/tasks?all=true",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "all",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET_GetQueueListHaveWorkSpaceId",
+			"item": [
+				{
+					"name": "GET /api/v0/workspaces/:workspace-id/tasks Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 500]);\r",
+									"});\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Test have error\", function(){\r",
+									"    if (pm.response.code === 500) {\r",
+									"        pm.expect(response.error).to.be.eql(\"(BadValue) $in needs an array\");\r",
+									"    }\r",
+									"    if (pm.response.code === 200) {\r",
+									"        // pm.expect(response.search_result).to.be.a(null);\r",
+									"        pm.expect(true).to.be.eq(true);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const http = pm.variables.get(\"httpLinker\");",
+									"const token = pm.variables.get(\"tokenLogin\");",
+									"",
+									"const getRequest = {",
+									"    url: `${http}/api/v0/workspaces`,",
+									"    method: 'GET',",
+									"    header: {",
+									"        'Content-Type': 'application/json',",
+									"        'Authorization': `Bearer ${token}`",
+									"    }",
+									"};",
+									"pm.sendRequest(getRequest, (error, response) => {",
+									"    if (error) {",
+									"        console.log(error);",
+									"        pm.expect(true).to.be.eql(false);",
+									"    } else {",
+									"        const res =  response.json();",
+									"        let workSpaceToSet = res.current_workspace_id;",
+									"        if (res.workspaces.length > 1) {",
+									"            const r = res.workspaces.find(w => w.workspace_id !== workSpaceToSet);",
+									"            workSpaceToSet = r.workspace_id;",
+									"        }",
+									"        pm.variables.set(\"workSpaceToSet\", workSpaceToSet);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenLogin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces/{{workSpaceToSet}}/tasks",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces",
+								"{{workSpaceToSet}}",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/v0/workspaces/:workspace-id/tasks NotAuth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header Success\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{httpLinker}}/api/v0/workspaces/{{workSpaceToSet}}/tasks",
+							"host": [
+								"{{httpLinker}}"
+							],
+							"path": [
+								"api",
+								"v0",
+								"workspaces",
+								"{{workSpaceToSet}}",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -109,6 +109,6 @@ workflows:
           filters:
               branches:
                 only:
-                  - circleci-project-setup
+                  - test_ci
           context: 
             - devops

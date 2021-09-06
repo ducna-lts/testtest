@@ -1,0 +1,17 @@
+# Workflow to associate labels automatically
+name: labeler
+# Trigger the workflow on pull request events
+on: 
+  pull_request:
+  branches:
+    - test_ci
+jobs:
+  label:
+    runs-on: ubuntu-18.04
+    container:
+      image:  node:10.16-jessie
+    steps:
+      # We need to checkout the repository to access the configured file (.github/label-pr.yml)
+      - uses: actions/checkout@v2
+      - name: Labeler
+      - run: npm -v
